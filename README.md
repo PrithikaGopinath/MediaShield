@@ -1,36 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# **MediaShield — AI‑Generated & Deepfake Image Detection Platform**
 
-## Getting Started
+MediaShield is a dual‑model image forensics platform designed to detect **AI‑generated images** (Bing Image Creator, DALL·E, Stable Diffusion, Midjourney) and **deepfake images** using modern machine‑learning models. Built for reliability, clarity, and demo‑readiness, MediaShield provides a clean UI and a robust backend powered by Replicate.
 
-First, run the development server:
+---
 
+## 🚀 Features
+
+- **AI‑Generated Image Detection**  
+  Uses a diffusion‑capable Replicate model to identify images created by modern AI systems.
+
+- **Deepfake Detection**  
+  Uses the FaceForensics++ model to detect manipulated or swapped faces.
+
+- **Dual‑Model Pipeline**  
+  Both detectors run independently, and MediaShield combines their outputs into a final verdict.
+
+- **Clear Verdict System**  
+  - AI‑generated  
+  - Deepfake  
+  - Real  
+  - Uncertain
+
+- **Clean, Professional UI**  
+  Displays scores and verdicts with color‑coded clarity.
+
+---
+
+## 🧠 How MediaShield Works
+
+### 1. Image Upload
+Users upload an image through the frontend.
+
+### 2. Backend Processing
+The backend sends the image to two Replicate models:
+
+#### Deepfake Detection  
+Model: **FaceForensics++**  
+Detects:
+- Face swaps  
+- Manipulated facial regions  
+- Neural deepfake artifacts  
+
+Returns:  
+`deepfake_score` (0–1)
+
+#### AI‑Generated Detection  
+Model: **tstramer/ai-image-detector**  
+Detects:
+- Bing Image Creator  
+- DALL·E  
+- Stable Diffusion  
+- Midjourney  
+
+Returns:  
+`ai_generated_score` (0–1)
+
+### 3. Verdict Logic
+MediaShield combines both scores:
+
+- **AI-generated** → AI score > 0.7  
+- **Deepfake** → Deepfake score > 0.7  
+- **Uncertain** → borderline scores  
+- **Real** → both scores low  
+
+### 4. Frontend Display
+The ResultCard component shows:
+
+- AI‑generated score  
+- Deepfake score  
+- Final verdict  
+- Color-coded output  
+
+---
+
+## 🛠️ Tech Stack
+
+- Next.js 14  
+- TypeScript  
+- TailwindCSS  
+- Replicate API  
+- Node.js Runtime  
+
+---
+
+## 📦 Installation & Setup
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/PrithikaGopinath/MediaShield.git
+cd MediaShield
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Add environment variables
+Create `.env.local`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+REPLICATE_API_TOKEN=your_replicate_api_key_here
+```
 
-## Learn More
+### 4. Run the development server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Your app will be live at:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+http://localhost:3000
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📡 API Endpoints
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### POST /api/detect
+Uploads an image and returns:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```json
+{
+  "ai_generated_score": 0.92,
+  "deepfake_score": 0.03,
+  "final_label": "AI-generated"
+}
+```
+
+---
+
+## 🧪 Testing the System
+
+### AI Images
+Try images from:
+- Bing Image Creator  
+- DALL·E  
+- Midjourney  
+- Stable Diffusion  
+
+Expected:  
+**AI-generated Score: high**
+
+### Deepfakes
+Try:
+- Face swaps  
+- Deepfake datasets  
+
+Expected:  
+**Deepfake Score: high**
+
+### Real Images
+Expected:  
+**Both scores low → Verdict: Real**
+
+---
+
+## 📁 Project Structure
+
+```
+/components
+  ResultCard.tsx
+
+/src/app/api/detect
+  route.ts
+
+/public
+  (static assets)
+
+/app
+  (frontend pages)
+```
+
+---
+
+## 🏆 Why MediaShield Stands Out
+
+- Detects **modern diffusion AI images** (most detectors fail here)  
+- Uses **two independent forensic models**  
+- Clean, judge‑friendly UI  
+- Fully reproducible setup  
+- Fast, reliable, and hackathon‑ready  
+
+---
+
+## 🔮 Future Enhancements
+
+- Video deepfake detection  
+- Metadata + EXIF analysis  
+- Multi‑model ensemble scoring  
+- Browser extension version  
+- Proper settign up of the model to analyse the data.
